@@ -1,0 +1,227 @@
+
+Q1. What is Django-Framework ? 
+
+
+
+
+Q2. Difference Between MVT and MVC ? 
+------------------------------------------------------------------------------------------------------------------------------------------
+
+	-> 		MVT 								MVC
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	-> MVT stand for Model view Templates 					-> MVC stand fro Model View Controller
+
+	-> Model (M): In Django's MVT, the Model still represents the 		-> Model(M): The Model represents the application's data and business logic.
+	application's data and handles data-related operations 				It interacts with the database and handles data-related operations.
+	as in MVC.		
+
+	-> Example : 								-> Example :
+----------------------------------------------------                             ----------------------------------------------------------------------
+	from django.db import models							from django.db import models		
+	class User(models.Model):								class User(models.Model):
+    	   name = models.CharField(max_length=100)							  name = models.CharField(max_length=100)												  email = models.EmailField()
+    	   email = models.EmailField()									   email = models.EmailField()
+
+
+-----------------------------------------------------				-----------------------------------------------------------------------
+
+	-> View(V): In Django's MVT, the View is responsible			-> View(V): The View is responsible for presenting data to the user and handling user inpu
+ 	for processing HTTP requests, retrieving data from the Model			   It often includes templates or rendering logic.
+ 	and returning an HTTP response.
+	Django's View often includes template rendering.	
+	
+	-> Example : 								-> Examples: 
+ 
+----------------------------------------------------------                      ------------------------------------------------------------------------
+
+from django.shortcuts import render						<!DOCTYPE html>
+from .models import User							<html>
+  										<head>
+def user_profile(request, user_id):    						<title>User Profile</title>
+  	 user = User.objects.get(id=user_id) 					</head>									
+    return render(request, 'user_profile.html', {'user': user})			<body>
+											<h1>Welcome <%= @user.name %></h1>							
+    											<p>Email: <%= @user.email %></p>
+  										</body>
+										</html>	
+
+----------------------------------------------------------			-------------------------------------------------------------------------
+
+	-> Template(C): Django introduces a distinct Template				-> Controller(C):The Controller acts as an intermediary between the Model and View.
+	 component for defining the presentation layer.					It handles user requests, processes data from the Model, and updates the View.
+	Templates contain HTML markup and template tags/
+	filters to display data from the 
+
+
+
+	-> Example : 								-> Example: (using RUBY)
+---------------------------------------------------------			-------------------------------------------------------------------------------
+
+<!DOCTYPE html>									class UserController
+<html>											def show
+<head>											@user = User.find(params[:id]) # Fetch user data from the Model
+    <title>User Profile</title>								render('users/show') # Render the View
+</head>
+<body>											end
+    <h1>Welcome {{ user.name }}</h1>
+    <p>Email: {{ user.email }}</p>						end
+</body>
+</html>
+															
+
+---------------------------------------------------------- 			-----------------------------------------------------------------------------------
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+
+
+Q3. What is Middleware in Django ? 
+
+
+	-> Middleware in Django is a way to process requests and responses globally before they reach 
+	the view or after they leave the view. Middleware components are executed in a specific order,
+	 and they can perform various tasks such as authentication, security, modifying request or 
+	response objects, and more.
+	(Django ରେ ମିଡିଲୱେର୍ ହେଉଛି ଭ୍ୟୁରେ ପହଞ୍ଚିବା ପୂର୍ବରୁ କିମ୍ବା ଦୃଶ୍ୟ ଛାଡିବା ପରେ ସର୍ବଭାରତୀୟ ସ୍ତରରେ ଅନୁରୋଧ ଏବଂ ପ୍ରତିକ୍ରିୟା ପ୍ରକ୍ରିୟାକରଣ
+	 କରିବାର ଏକ ଉପାୟ | ମିଡିଲୱେର୍ ଉପାଦାନଗୁଡିକ ଏକ ନିର୍ଦ୍ଦିଷ୍ଟ କ୍ରମରେ ଏକଜେକ୍ୟୁଟ୍ ହୁଏ, ଏବଂ ସେମାନେ ବିଭିନ୍ନ କାର୍ଯ୍ୟ କରିପାରିବେ ଯେପରିକି ପ୍ରାମାଣିକିକରଣ,
+	ସୁରକ୍ଷା, ଅନୁରୋଧ କିମ୍ବା ପ୍ରତିକ୍ରିୟା ବସ୍ତୁ ପରିବର୍ତ୍ତନ କରିବା |
+
+-> How It Work ? 
+
+	when a client sends a request, it first goes through URL routing to determine the view. 
+	After that, the request passes through middleware (specifically, request middleware), and finally,
+ 	it reaches the view function, which processes the request and generates a response.
+ 	This order of processing ensures that the request is properly handled and the response is generated 
+	according to your application's logic
+	( ଯେତେବେଳେ ଏକ ଗ୍ରାହକ ଏକ ଅନୁରୋଧ ପଠାନ୍ତି, ଦୃଶ୍ୟ ନିର୍ଣ୍ଣୟ କରିବାକୁ ଏହା ପ୍ରଥମେ URL ରାଉଟିଙ୍ଗ୍ ଦେଇ ଯାଏ | ଏହା ପରେ,
+	 ଅନୁରୋଧ ମିଡିଲୱେୟାର (ନିର୍ଦ୍ଦିଷ୍ଟ ଭାବରେ, ମିଡୱେୟାର ଅନୁରୋଧ) ଦେଇ ଯାଇଥାଏ, ଏବଂ ଶେଷରେ, ଏହା ଦୃଶ୍ୟ କାର୍ଯ୍ୟରେ ପହଞ୍ଚେ, 
+	ଯାହା ଅନୁରୋଧ ପ୍ରକ୍ରିୟାକରଣ କରେ ଏବଂ ଏକ ପ୍ରତିକ୍ରିୟା ସୃଷ୍ଟି କରେ | ପ୍ରକ୍ରିୟାକରଣର ଏହି କ୍ରମ ନିଶ୍ଚିତ କରେ ଯେ ଅନୁରୋଧ ସଠିକ୍ ଭାବରେ
+	 ପରିଚାଳିତ ହେଉଛି ଏବଂ ଆପଣଙ୍କ ଅନୁପ୍ରୟୋଗର ତର୍କ ଅନୁଯାୟୀ ପ୍ରତିକ୍ରିୟା ସୃଷ୍ଟି ହୁଏ |)
+
+-> ClintRequest ---------------------- DjangoServer-------------------URLS --------------Middleware -------------View ----------Response to clint     
+
+-> Client Request --> Django Server (HTTP Request) --> URL Patterns (URL Routing) --> Middleware Processing --> View Function --> Response Generation--- 
+--> Middleware Processing (optional) --> Django Server (HTTP Response) --> Client Response
+
+
+-> Example: 
+	class ExampleMiddleware :
+    def __init__(self, get_response):
+        self.get_response = get_response
+        print("Iam Middleware_init")
+    def __call__(self, request, *args , **kwads):
+        print("Iam Middleware")
+        response = self.get_response(request)
+       
+        # user_agent = request.META.get("HTTP_USER_AGENT")
+        # request_url = request.build_absolute_uri()
+        # print("Request URL:", request_url) 
+        # Extract query parameters
+        # print(user_agent)
+        # Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69
+    
+        # path_segments = request.path.split('/')
+        # print("Path Segments:", path_segments)
+         # Request URL: http://127.0.0.1:8000/api/fetchinventory/?role=Store%20Manager
+        # print(response)
+        #<JsonResponse status_code=200,"application/json">
+        return response
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Q4. What is Builtin Middleware in Django ? 
+
+	--------------------------------------------------
+	-> 1. django.middleware.csrf.CsrfViewMiddleware:
+	--------------------------------------------------
+		-> Its protect the your Web application  from CSRF attack 
+		
+		-> GENERATE A CSRF-TOKEN : : When a user visits your Django site, the server generates a unique
+		  CSRF token. This token is typically stored in a cookie (the csrftoken cookie) and included as a 
+		hidden form field in every HTML form generated by Django.
+		
+		-> INCLUSION In forms : when a user submit the form autometically csrf-token included from data
+			the token willl stored in user cookies 
+		
+		-> VERIFICATION: when submit the form the data  will go through middleware the middleware check the csrf_token 
+		and create token will matches if match the token then it will go to view function then save th data 
+
+	-> Examples:
+-----------------------------------------
+<form method="post" action="/submit/">
+    {% csrf_token %}
+    <!-- other form fields -->
+    <input type="submit" value="Submit">
+</form>
+
+--------------------------------------------
+
+
+
+	-> 2. 
+
+
+
+
+Q3. What Is Signal In Django ? 
+
+
+	-> Signal is a form of  Notification  in software  developement  it serves as a way  to notify or inform differente parts 
+	of a programme about specific events or action take place a signal  can be emmmited or actions that have occured 
+	
+	(ହଁ, ତାହା ଠିକ୍ | ସଫ୍ଟୱେର୍ ବିକାଶରେ ଏକ ସଙ୍କେତ ହେଉଛି ବିଜ୍ଞପ୍ତିର ଏକ ରୂପ | ଏକ ନିର୍ଦ୍ଦିଷ୍ଟ ଘଟଣା କିମ୍ବା ଘଟିଥିବା କାର୍ଯ୍ୟ ବିଷୟରେ ଏକ ପ୍ରୋଗ୍ରାମର ବିଭିନ୍ନ ଅଂଶକୁ ସୂଚିତ କିମ୍ବା
+	 ସୂଚନା ଦେବା ପାଇଁ ଏହା ଏକ ଉପାୟ ଭାବରେ କାର୍ଯ୍ୟ କରେ |)
+
+	-> When a Signal create that time the  another parts of applications to notify and then that will  work this related signal  
+
+
+	When an event or action takes place, a signal can be emitted, and other parts of the program that are interested in
+ 	that event can listen for the signal and respond accordingly. This mechanism allows for effective communication 
+	and coordination between different components of a software system.  
+	
+	(ଯେତେବେଳେ ଏକ ଇଭେଣ୍ଟ କିମ୍ବା କାର୍ଯ୍ୟ ହୁଏ, ଏକ ସଙ୍କେତ ନିର୍ଗତ ହୋଇପାରେ, ଏବଂ ସେହି ଇଭେଣ୍ଟରେ ଆଗ୍ରହୀ ପ୍ରୋଗ୍ରାମର ଅନ୍ୟ ଅଂଶଗୁଡ଼ିକ ସିଗନାଲ୍ ଶୁଣନ୍ତି ଏବଂ ସେହି
+	 ଅନୁଯାୟୀ ପ୍ରତିକ୍ରିୟା କରିପାରନ୍ତି | ଏହି ପ୍ରଣାଳୀ ଏକ ସଫ୍ଟୱେର୍ ସିଷ୍ଟମର ବିଭିନ୍ନ ଉପାଦାନ ମଧ୍ୟରେ ପ୍ରଭାବଶାଳୀ ଯୋଗାଯୋଗ ଏବଂ ସମନ୍ୱୟ ପାଇଁ ଅନୁମତି ଦିଏ |)
+
+	-> Signal Concept : 
+	
+		-> Sender : Sender: The sender is the object that sends the signal. It can be a model, a function, or any Python object.
+	
+		->  RECEIVER :- The receiver is a Python function that gets executed in response to a signal. It "listens" for the
+		 signal and responds when the signal is sent.
+
+		-> SUGNAL :   A signal is a specific event or action that occurs in your application. It's a trigger for some action to be
+		 taken. Django provides several built-in signals, and you can also create custom signals.
+
+	-> Types Of Signal In Django  ? 
+
+	
+	-> Django provides built-in signal Model-Signal : 
+		
+		-> 1. Pre_save : Pre_save mean when the data will save before some time use some signal Example : OTP validateion use 
+		-> 2. Post_save  : Post_save mean after saveing any data in database semd email to successfull regestration message 
+
+
+	-> 3.Post_delete:signal is sent after a model instance has been successfully deleted from the database.
+		 It can be used for post-deletion cleanup or additional actions related to the deletion.
+		
+	
+	->4.Pre_delete : signal is sent just before a model instance is deleted. You can use it to perform actions or validations
+	 before the instance is removed from the database.
+	
+ 
+
+
+
+
+ 
+
+
+
+
+
